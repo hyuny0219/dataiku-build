@@ -1,0 +1,27 @@
+name: Build and Push Docker Image
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  docker:
+    runs-on: ubuntu-latest
+    env: 
+      dss_version: 14.0.0
+    steps:
+
+    - name: Checkout 코드
+      uses: actions/checkout@v4
+
+    - name: DockerHub 로그인
+      uses: docker/login-action@v3
+      with:
+        username: ${{ secrets.DOCKER_USERNAME }}
+        password: ${{ secrets.DOCKER_PASSWORD }}
+
+    - name: Docker 이미지 빌드
+      run: docker build --build-arg DSS_VERSION=$dss_version -t eunhong/dss-engine:$dss_version .
+
+    - name: Docker 이미지 푸시
+      run: docker push eunhong/dss-engine:$dss_version
