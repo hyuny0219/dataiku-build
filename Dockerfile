@@ -57,8 +57,13 @@ RUN dnf install -y epel-release && \
 COPY entrypoint.sh /entrypoint.sh
 RUN chmod a+x /entrypoint.sh    
 
-#COPY dataiku-dss-${DSS_VERSION}.tar.gz /data
-#COPY dataiku-dss-${DSS_VERSION}-sha256sums.txt /data
+
+RUN mkdir -p /opt/config && \
+    echo "DSS_VERSION=${DSS_VERSION}" > /opt/config/config.env && \
+    echo "NODE_TYPE=${NODE_TYPE}" >> /opt/config/config.env && \
+    echo "DSS_INSTALLDIR=${DSS_INSTALLDIR}" >> /opt/config/config.env && \
+    echo "DSS_HOME=${DSS_HOME}" >> /opt/config/config.env && \
+    echo "DSS_PORT=${DSS_PORT}" >> /opt/config/config.env
 
 RUN chown -R dataiku:dataiku /data
 
@@ -84,12 +89,7 @@ RUN wget https://downloads.dataiku.com/public/dss/${DSS_VERSION}/dataiku-dss-${D
 ENV PATH="/usr/bin:$PATH"
 ENV PYTHON_BIN=python3.9
 
-RUN mkdir -p /opt/config && \
-    echo "DSS_VERSION=${DSS_VERSION}" > /opt/config/config.env && \
-    echo "NODE_TYPE=${NODE_TYPE}" >> /opt/config/config.env && \
-    echo "DSS_INSTALLDIR=${DSS_INSTALLDIR}" >> /opt/config/config.env && \
-    echo "DSS_HOME=${DSS_HOME}" >> /opt/config/config.env && \
-    echo "DSS_PORT=${DSS_PORT}" >> /opt/config/config.env
+
 
 #RUN echo "DSS_VERSION=${DSS_VERSION}" > config.env && \
 #    echo "NODE_TYPE=${NODE_TYPE}" >> config.env &&\
