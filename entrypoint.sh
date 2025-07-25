@@ -10,7 +10,7 @@ echo "Usage: NODE_TYPE : api : api node
 docker run <iamge> start design|automation|api
 "
 
-source config.env
+source /opt/config/config.env
 echo "DSS Version: ${DSS_VERSION}"
 echo "DSS_INSTALLDIR: ${DSS_INSTALLDIR}"
 echo "DSS_HOME: ${DSS_HOME}"
