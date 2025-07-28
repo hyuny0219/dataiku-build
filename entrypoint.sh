@@ -40,6 +40,17 @@ start_dss() {
     echo "Starting DSS..."
     echo "DSS_VERSION=${DSS_VERSION} NODE_TYPE=${NODE_TYPE} DSS_HOME=${DSS_HOME} DSS_INSTALLDIR=${DSS_INSTALLDIR}"
 
+    cd /data
+    
+    wget https://downloads.dataiku.com/public/dss/${DSS_VERSION}/dataiku-dss-${DSS_VERSION}.tar.gz && \
+    wget https://downloads.dataiku.com/public/dss/${DSS_VERSION}/dataiku-dss-${DSS_VERSION}-sha256sums.txt && \
+    tar xzf dataiku-dss-${DSS_VERSION}.tar.gz && \
+    mv dataiku-dss-${DSS_VERSION}-sha256sums.txt dataiku-dss-${DSS_VERSION} && \
+    cd dataiku-dss-${DSS_VERSION} && \
+    sha256sum -c dataiku-dss-${DSS_VERSION}-sha256sums.txt 2>&1 | grep "OK" && \
+    rm -f dataiku-dss-${DSS_VERSION}.tar.gz
+
+
     if [ ! -f ${DSS_HOME}/bin/env-default.sh ]; then
             # Initialize new data directory
             ${DSS_INSTALLDIR}/installer.sh -t ${NODE_TYPE} -d ${DSS_HOME} -p ${DSS_PORT}
@@ -82,25 +93,7 @@ restart_dss() {
      ${DSS_HOME}/bin/dss status
 }
 
-license_dss() {
-    echo "Checking DSS license..."
 
-    LICENSE_FILE="$2"
-    if [ -z "$LICENSE_FILE" ]; then
-        echo "라이선스 JSON 파일 경로를 지정해야 합니다: $0 license -f license.json"
-        exit 1
-    fi
-
-    if [ ! -f "$LICENSE_FILE" ]; then
-        echo "지정한 라이선스 파일이 존재하지 않습니다: $LICENSE_FILE"
-        exit 1
-    fi
-
-    echo "라이선스 등록 중: $LICENSE_FILE"
-    ${DSS_HOME}/bin/dssadmin license set-json "$LICENSE_FILE"
-
-    echo "라이선스 등록 완료!"    
-}
 health_check() {
     echo "DSS Health Check:"
     if ${DSS_HOME}/bin/dss status | grep -q "RUNNING"; then
@@ -112,47 +105,6 @@ health_check() {
     fi
 }
 
-install_dss() {
-    echo "🔧 Installing DSS..."
-    if [ -z "${DSS_VERSION}" ]; then
-        echo "DSS version not specified. "
-        exit 1
-    else
-        echo "Installing DSS version: DSS_VERSION=${DSS_VERSION}"
-    fi
-    if [ -z "${NODE_TYPE}" ]; then
-        NODE_TYPE="design"
-        echo "DSS version not specified. Using default: ${NODE_TYPE}"
-    else
-        echo "Installing DSS version:${DSS_VERSION} NODE_TYPE:${NODE_TYPE}"
-    fi    
-    ${DSS_INSTALLDIR}/installer.sh -t ${NODE_TYPE} -d ${DSS_HOME} -p ${DSS_PORT}
-#    ${DSS_HOME}/bin/dssadmin install-R-integration
-    ${DSS_HOME}/bin/dssadmin install-graphics-export
-
-    exit 0
-}
-upgrade_dss() {
-    echo "Upgrading DSS..."
-    if [ -z "${DSS_VERSION}" ]; then
-        echo "DSS version not specified."
-        exit 1
-    else
-        echo "Installing DSS version: DSS_VERSION=${DSS_VERSION}"
-    fi
-    if [ -z "${NODE_TYPE}" ]; then
-        NODE_TYPE="design"
-        echo "DSS version not specified. Using default: ${NODE_TYPE}"
-    else
-        echo "Installing DSS version:${DSS_VERSION} NODE_TYPE:${NODE_TYPE}"
-    fi    
-    ${DSS_INSTALLDIR}/installer.sh -t ${NODE_TYPE} -d ${DSS_HOME} -u -y
-#    ${DSS_HOME}/bin/dssadmin install-R-integration
-    ${DSS_HOME}/bin/dssadmin install-graphics-export
-
-    exit 0
-    
- }
 
 case "$1" in
     start)
@@ -167,17 +119,6 @@ case "$1" in
     health)
         health_check
         ;;
-    install)
-        install_dss
-        start_dss
-        ;;  
-    upgrade)
-        upgrade_dss
-        start_dss
-        ;; 
-    license)
-        license_dss "$@"
-    ;;
     *)
         echo "Usage: $0 {start|stop|restart|health}"
         exit 1
