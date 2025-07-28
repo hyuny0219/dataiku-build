@@ -52,7 +52,16 @@ start_dss() {
 
 
     if [ ! -f ${DSS_HOME}/bin/env-default.sh ]; then
-            # Initialize new data directory
+            echo "Initialize new data directory"
+
+            wget https://downloads.dataiku.com/public/dss/${DSS_VERSION}/dataiku-dss-${DSS_VERSION}.tar.gz && \
+            wget https://downloads.dataiku.com/public/dss/${DSS_VERSION}/dataiku-dss-${DSS_VERSION}-sha256sums.txt && \
+            tar xzf dataiku-dss-${DSS_VERSION}.tar.gz && \
+            mv dataiku-dss-${DSS_VERSION}-sha256sums.txt dataiku-dss-${DSS_VERSION} && \
+            cd dataiku-dss-${DSS_VERSION} && \
+            sha256sum -c dataiku-dss-${DSS_VERSION}-sha256sums.txt 2>&1 | grep "OK" && \
+            rm -f dataiku-dss-${DSS_VERSION}.tar.gz
+            
             ${DSS_INSTALLDIR}/installer.sh -t ${NODE_TYPE} -d ${DSS_HOME} -p ${DSS_PORT}
 
         if [ "api" != ${NODE_TYPE} ];then
