@@ -8,7 +8,7 @@ jobs:
   Image-build:
     runs-on: ubuntu-latest
     env: 
-      dss_version: 14.0.1
+      dss_version: 13.5.5
     steps:
 
     - name: Checkout 코드
@@ -24,4 +24,4 @@ jobs:
       run: docker build --build-arg DSS_VERSION=$dss_version -t eunhong/dss-engine:$dss_version .
 
     - name: Docker 이미지 푸시
-      run: docker push eunhong/dataikueunhong/dss-engine:$dss_version
+      run: docker push eunhong/dss-engine:$dss_version
