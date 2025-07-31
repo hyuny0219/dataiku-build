@@ -24,6 +24,11 @@ echo "DSS_INSTALLDIR: ${DSS_INSTALLDIR}"
 echo "DSS_HOME: ${DSS_HOME}"
 echo "DSS_PORT: ${DSS_PORT}"
 
+if [ "$1" = "bash" ] || [ "$1" = "sh" ]; then
+  echo "🚫 접속이 차단되었습니다."
+  exit 1
+fi
+
 if [ -z $2 ];then
     NODE_TYPE=${NODE_TYPE}
 else
