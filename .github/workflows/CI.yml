@@ -8,7 +8,7 @@ jobs:
   Image-build:
     runs-on: ubuntu-latest
     env: 
-      dss_version: 13.5.5
+      dss_version: 14.0.0
     steps:
 
     - name: Checkout 코드
