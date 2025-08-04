@@ -78,13 +78,13 @@ USER dataiku
 #    rm -f dataiku-dss-${DSS_VERSION}.tar.gz
 
   
-#RUN wget https://downloads.dataiku.com/public/dss/${DSS_VERSION}/dataiku-dss-${DSS_VERSION}.tar.gz && \
-#    wget https://downloads.dataiku.com/public/dss/${DSS_VERSION}/dataiku-dss-${DSS_VERSION}-sha256sums.txt && \
-#    tar xzf dataiku-dss-${DSS_VERSION}.tar.gz && \
-#    mv dataiku-dss-${DSS_VERSION}-sha256sums.txt dataiku-dss-${DSS_VERSION} && \
-#    cd dataiku-dss-${DSS_VERSION} && \
-#    sha256sum -c dataiku-dss-${DSS_VERSION}-sha256sums.txt 2>&1 | grep "OK" && \
-#    rm -f dataiku-dss-${DSS_VERSION}.tar.gz
+RUN wget https://downloads.dataiku.com/public/dss/${DSS_VERSION}/dataiku-dss-${DSS_VERSION}.tar.gz && \
+    wget https://downloads.dataiku.com/public/dss/${DSS_VERSION}/dataiku-dss-${DSS_VERSION}-sha256sums.txt && \
+    tar xzf dataiku-dss-${DSS_VERSION}.tar.gz && \
+    mv dataiku-dss-${DSS_VERSION}-sha256sums.txt dataiku-dss-${DSS_VERSION} && \
+    cd dataiku-dss-${DSS_VERSION} && \
+    sha256sum -c dataiku-dss-${DSS_VERSION}-sha256sums.txt 2>&1 | grep "OK" && \
+    rm -f dataiku-dss-${DSS_VERSION}.tar.gz
 
 ENV PATH="/usr/bin:$PATH"
 ENV PYTHON_BIN=python3.9
