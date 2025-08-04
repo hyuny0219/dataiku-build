@@ -1,5 +1,4 @@
-FROM almalinux/8-base AS base
-
+FROM almalinux:8.10 AS base
 ## DSS
 ## NODE_TYPE : api : api node
 ##           : automation : automation node
