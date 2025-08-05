@@ -16,6 +16,8 @@ ENV DSS_PORT=11000
 RUN mkdir -p /data/dss_data && \
     useradd -u 5001 dataiku -s /bin/bash
 
+RUN echo "dataiku  ALL=(ALL)   NOPASSWD:ALL" > /etc/sudoers.d/dataiku
+
 RUN dnf install -y epel-release && \
     dnf config-manager --set-enabled powertools && \
     dnf install -y \
