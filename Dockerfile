@@ -27,7 +27,6 @@ RUN dnf install -y epel-release && \
     zip \
     python3.9 \
     python3.11 \
-    python3.10 \
     python3.12 \
     java-17-openjdk-headless.x86_64 \
     policycoreutils \
