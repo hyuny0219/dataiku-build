@@ -43,7 +43,7 @@ start_dss() {
     if [ ! -f ${DSS_HOME}/bin/env-default.sh ]; then
             echo "Initialize new data directory"
 
-            ${DSS_INSTALLDIR}/installer.sh -t ${NODE_TYPE} -d ${DSS_HOME} -p ${DSS_PORT}
+            ${DSS_INSTALLDIR}/installer.sh -t ${NODE_TYPE} -d ${DSS_HOME} -p ${DSS_PORT} -P python3.11
 
         if [ "api" != ${NODE_TYPE} ];then
 #               ${DSS_HOME}/bin/dssadmin install-R-integration
@@ -56,7 +56,7 @@ start_dss() {
     elif [ $(bash -c 'source ${DSS_HOME}/bin/env-default.sh && echo "$DKUINSTALLDIR"') != "$DSS_INSTALLDIR" ]; then
             # Upgrade existing data directory
             rm -rf "$DSS_DATADIR"/pyenv
-            ${DSS_INSTALLDIR}/installer.sh -t ${NODE_TYPE} -d ${DSS_HOME} -u -y
+            ${DSS_INSTALLDIR}/installer.sh -t ${NODE_TYPE} -d ${DSS_HOME} -u -y  -P python3.11
         if [ "api" != ${NODE_TYPE} ];then
 #                ${DSS_HOME}/bin/dssadmin install-R-integration
              ${DSS_HOME}/bin/dssadmin install-graphics-export
