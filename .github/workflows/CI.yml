@@ -24,4 +24,4 @@ jobs:
       run: docker build --build-arg DSS_VERSION=$dss_version -t eunhong/dss-engine:$dss_version .
 
     - name: Docker 이미지 푸시
-      run: docker push eunhong/dss-engine:$dss_version
+      run: docker push thkim136/dss-engine:$dss_version
