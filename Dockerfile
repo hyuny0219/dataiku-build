@@ -4,7 +4,7 @@ FROM almalinux:8.10 AS base
 ##           : automation : automation node
 ##           : design : design node
 
-ARG DSS_VERSION=14.1.4
+ARG DSS_VERSION=14.2.0
 ARG NODE_TYPE=design
 
 ENV NODE_TYPE=${NODE_TYPE}
