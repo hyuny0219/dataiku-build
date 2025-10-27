@@ -61,6 +61,9 @@ design node install/upgrade/start
 docker run -id --name dss-design -v dss_design:/data -v ./license.json:/data/license.json:ro -p 8181:11000 dss-engine:13.5.5 start design
 ```
 
+docker run -id --name dss-design -v dss_design:/data -v ./license.json:/data/license.json:ro -p 8189:11000 dss-engine:14.1.4 start design
+```
+
 최초 설치 시에 DSS_HOME 디렉토리에 파일이 있을 경우 설치 에러가 나기때문에 license 파일을 /data 디렉토리에 mount
 
 ### version upgrade
@@ -85,3 +88,42 @@ entrypoint.sh 파일내에 아래와 같은 코드로 license 파일 복사 처�
     cp /data/license.json /data/dss_data/config/license.json
 </pre>
 
+docker run -d \
+  --name minio \
+  -p 9000:9000 \
+  -p 9001:9001 \
+  -e MINIO_ROOT_USER=minioadmin \
+  -e MINIO_ROOT_PASSWORD=minioadmin123 \
+  -v minio:/data \
+  quay.io/minio/minio:RELEASE.2025-09-10T22-00-38Z \
+  server /data --console-address ":9001"
+
+
+docker volume create \
+-d local \
+-o type=none \
+-o device=/data/shinhan/minio/minio \
+-o o=bind \
+minio
+
+
+docker run -d \
+  --name minio \
+  -p 9000:9000 \
+  -p 9001:9001 \
+  -e MINIO_ROOT_USER=minioadmin \
+  -e MINIO_ROOT_PASSWORD=minioadmin123 \
+  -v minio:/data \
+  minio/minio:latest \
+  server /data --console-address ":9001"
+
+
+  docker run -d \
+  --name minio \
+  -p 19000:9000 \
+  -p 19001:9001 \
+  -e MINIO_ROOT_USER=dataiku1234 \
+  -e MINIO_ROOT_PASSWORD=dataiku1234 \
+  -v minio:/data \
+  minio/minio:latest \
+  server /data --console-address ":19001"

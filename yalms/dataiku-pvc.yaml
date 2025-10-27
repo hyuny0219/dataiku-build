@@ -1,0 +1,17 @@
+apiVersion: v1
+items:
+- apiVersion: v1
+  kind: PersistentVolumeClaim
+  metadata:
+    name: dss-data
+    namespace: dataiku
+  spec:
+    accessModes:
+    - ReadWriteMany
+    resources:
+      requests:
+        storage: 10Gi
+    storageClassName: nfs-sc
+kind: List
+metadata:
+  resourceVersion: ""

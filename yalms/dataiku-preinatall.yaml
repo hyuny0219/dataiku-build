@@ -1,0 +1,59 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: dataiku-pre-install-job
+  namespace: dataiku
+spec:
+  ttlSecondsAfterFinished: 30
+  template:
+    spec:
+      containers:
+      - name: dataiku-install
+        image: eunhong/dss-engine:14.0.0
+        imagePullPolicy: Always
+        volumeMounts:
+          - name: license-file
+            mountPath: /data/license.json
+            subPath: license.json
+          - name: data
+            mountPath: /data
+          - name: config-volume
+            mountPath: /opt/config           
+
+        command: ["/bin/sh", "-c"]
+        args:
+          - |
+            mkdir -p /data
+            cat <<EOF > /data/config.env
+            DSS_VERSION=${DSS_VERSION}
+            NODE_TYPE=${NODE_TYPE}
+            DSS_INSTALLDIR=${DSS_INSTALLDIR}
+            DSS_HOME=${DSS_HOME}
+            DSS_PORT=${DSS_PORT}
+            EOF
+
+            echo ${DSS_VERSION}
+            echo ${NODE_TYPE}
+            echo ${DSS_INSTALLDIR}
+            echo ${DSS_HOME}
+            echo ${DSS_PORT}
+
+            wget https://downloads.dataiku.com/public/dss/${DSS_VERSION}/dataiku-dss-${DSS_VERSION}.tar.gz && \
+            wget https://downloads.dataiku.com/public/dss/${DSS_VERSION}/dataiku-dss-${DSS_VERSION}-sha256sums.txt && \
+            tar xzf dataiku-dss-${DSS_VERSION}.tar.gz && \
+            mv dataiku-dss-${DSS_VERSION}-sha256sums.txt dataiku-dss-${DSS_VERSION} && \
+            cd dataiku-dss-${DSS_VERSION} && \
+            sha256sum -c dataiku-dss-${DSS_VERSION}-sha256sums.txt 2>&1 | grep "OK" && \
+            rm -f dataiku-dss-${DSS_VERSION}.tar.gz dataiku-dss-${DSS_VERSION}-sha256sums.txt 
+            
+      restartPolicy: Never
+   
+      volumes:
+        - name: license-file
+          configMap:
+            name: license.json
+        - name: data
+          persistentVolumeClaim:
+            claimName: dss-data
+        - name: config-volume
+          emptyDir: {}

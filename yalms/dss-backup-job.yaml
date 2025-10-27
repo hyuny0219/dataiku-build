@@ -1,0 +1,46 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: pvc-backup-job
+spec:
+  template:
+    spec:
+      containers:
+      - name: backup
+        image: busybox
+        command: ["/bin/sh", "-c"]
+        args:
+          - |
+            tar czf /backup/data.tar.gz -C /data .
+        volumeMounts:
+        - name: target-pvc
+          mountPath: /data
+        - name: backup-pvc
+          mountPath: /backup
+      restartPolicy: Never
+      volumes:
+      - name: target-pvc
+        persistentVolumeClaim:
+          claimName: dss-data
+      - name: backup-pvc
+        persistentVolumeClaim:
+          claimName: dss-data-backup
+---
+apiVersion: v1
+items:
+- apiVersion: v1
+  kind: PersistentVolumeClaim
+  metadata:
+    name: dss-data-backup
+    namespace: dataiku
+  spec:
+    accessModes:
+    - ReadWriteMany
+    resources:
+      requests:
+        storage: 10Gi
+    storageClassName: nfs-sc
+kind: List
+metadata:
+  resourceVersion: ""
+
