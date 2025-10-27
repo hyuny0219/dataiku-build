@@ -21,7 +21,7 @@ jobs:
         password: ${{ secrets.DOCKER_PASSWORD }}
 
     - name: Docker 이미지 빌드
-      run: docker build --build-arg DSS_VERSION=$dss_version -t eunhong/dss-engine:$dss_version .
+      run: docker build --build-arg DSS_VERSION=$dss_version -t thkim136/dss-engine:$dss_version .
 
     - name: Docker 이미지 푸시
       run: docker push thkim136/dss-engine:$dss_version
