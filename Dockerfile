@@ -1,4 +1,4 @@
-FROM almalinux:8.10 AS base
+FROM almalinux:9.6 AS base
 ## DSS
 ## NODE_TYPE : api : api node
 ##           : automation : automation node
@@ -19,7 +19,7 @@ RUN mkdir -p /data/dss_data && \
 #RUN echo "dataiku  ALL=(ALL)   NOPASSWD:ALL" > /etc/sudoers.d/dataiku
 
 RUN dnf install -y epel-release && \
-    dnf config-manager --set-enabled powertools && \
+    dnf config-manager --set-enabled crb && \
     dnf install -y \
     acl \
     expat \
